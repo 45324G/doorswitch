@@ -1,1 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111411">
+  <meta name="description" content="Два туалета. Их текущий статус на одном экране.">
+  <title>Doorswitch · Статус туалетов</title>
+  
+  <style>@charset "UTF-8";
+:root{color-scheme:dark;--bg:#111411;--surface:#191d19;--border:#30362f;--ink:#f1f1e8;--muted:#a4ada0;--green:#b6e78d;--red:#fa8e83;--gray:#9ba59a;font-family:Inter,"Segoe UI",Arial,sans-serif;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);min-width:300px}button,input{font:inherit}button,a,input{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{opacity:.5;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:5px}button{color:inherit}a{color:inherit;text-decoration:none}[hidden]{display:none!important}.shell{max-width:1240px;padding:0 54px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);height:106px}.brand{display:flex;align-items:center;font-size:27px;letter-spacing:-1.2px;font-weight:650}.brand-dot{color:var(--green)}.brand-mark{display:flex;gap:4px;margin-right:12px}.brand-mark i{height:17px;width:6px;border-radius:5px;background:var(--green)}.brand-mark i:last-child{height:12px;align-self:end;opacity:.45}.location{color:var(--muted);font:11px "Segoe UI",sans-serif;letter-spacing:2px}.location span{margin:0 14px;color:#596454}.text-button{border:0;background:none;padding:10px 0;color:var(--muted);font-size:12px}.text-button:hover{color:var(--ink)}.text-button>span{margin-left:8px}main{padding-top:60px}.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:42px}.eyebrow{font-size:10px;letter-spacing:2.7px;color:var(--green);display:flex;align-items:center;gap:9px;margin:0 0 18px}.tiny-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}h1{font-weight:450;font-size:clamp(32px,4.7vw,57px);letter-spacing:-2.2px;margin:0 0 13px;line-height:1.08}.subtitle{color:var(--muted);font-size:14px;margin:0}.clock{display:flex;flex-direction:column;gap:10px;text-align:right;padding-top:24px}.clock time{font-size:36px;letter-spacing:-1.4px;font-variant-numeric:tabular-nums;font-weight:350}.clock span{font-size:11px;color:var(--muted)}.doors{display:grid;grid-template-columns:1fr 1fr;gap:20px}.door-card{--signal:var(--gray);--signal-rgb:155,165,154;background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative}.door-card[data-state=free]{--signal:var(--green);--signal-rgb:182,231,141}.door-card[data-state=busy]{--signal:var(--red);--signal-rgb:250,142,131}.card-top{display:flex;align-items:center;justify-content:space-between;padding:25px 28px}.card-top h2{font-size:16px;font-weight:450;margin:0}.room-number{font:12px "Consolas",monospace;color:#899382}.signal-area{display:flex;justify-content:center;padding:20px 0 26px}.signal{display:grid;place-items:center;width:130px;height:130px;border-radius:50%;color:var(--signal);background:rgba(var(--signal-rgb),.09);position:relative;border:1px solid rgba(var(--signal-rgb),.2)}.signal:before{content:"";position:absolute;inset:-13px;border:1px solid rgba(var(--signal-rgb),.07);border-radius:50%}.signal svg{width:43px;height:52px}.door-card[data-state=free] .signal{box-shadow:0 0 80px rgba(var(--signal-rgb),.06)}.card-status{text-align:center;padding-bottom:30px}.status-label{font-size:34px;letter-spacing:-1.1px;font-weight:420;color:var(--signal)}.status-detail{font-size:12px;margin:10px 0 0;color:var(--muted)}.card-bottom{border-top:1px solid var(--border);padding:17px 25px;display:flex;gap:8px;justify-content:space-between;color:var(--muted);font-size:10px;min-height:50px}.card-bottom>span:first-child{display:flex;align-items:center;gap:7px}.state-dot{display:inline-block;width:5px;height:5px;background:var(--signal);border-radius:50%;flex-shrink:0}.reading-time{color:#a4ada0;white-space:nowrap}.connection{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:21px 25px;border:1px solid var(--border);border-radius:12px;gap:18px}.connection-copy{display:flex;gap:17px;align-items:center}.connection-icon{font-size:30px;color:var(--muted)}.connection p{font-size:12px;margin:0 0 7px}.connection-copy span:not(.connection-icon){font-size:11px;color:var(--muted)}.refresh-button{background:#262c24;border:1px solid #3d4637;border-radius:7px;padding:12px 17px;font-size:11px;white-space:nowrap}.refresh-button:hover{background:#333b2f}.refresh-button>span{font-size:16px;margin-right:6px;display:inline-block}.refresh-button[aria-busy=true]>span{animation:spin 1s linear infinite}.legend{display:flex;gap:26px;justify-content:center;margin:31px 0 20px;font-size:11px;color:var(--muted)}.legend>span{display:flex;gap:8px;align-items:center}.legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%}.green{background:var(--green)}.red{background:var(--red)}.gray{background:var(--gray)}.footnote{color:#909b89;font-size:10px;text-align:center;line-height:1.7;margin:0 auto;max-width:580px}footer{margin-top:50px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:22px 0 24px;color:#909b89;font-size:10px}footer>div{display:flex;gap:26px}footer .text-button{font-size:10px}.demo-banner{border:1px solid #8b743c;background:#2b271c;color:#e6c879;padding:13px 18px;border-radius:9px;margin-bottom:18px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:12px}.demo-banner button{border:0;background:none;color:inherit;text-decoration:underline;font-size:11px}.compact .intro,.compact .legend,.compact .footnote,.compact footer,.compact .location{display:none}.compact main{padding-top:25px}.compact .shell{max-width:700px}.compact .card-top{padding:16px}.compact .card-bottom{display:none}.compact .signal-area{padding:12px 0 25px}.compact .signal{width:75px;height:75px}.compact .signal svg{width:28px;height:35px}.compact .status-label{font-size:24px}.compact .status-detail{font-size:10px}.compact .connection{padding:15px}.compact .connection-copy span:not(.connection-icon){display:none}dialog{width:min(500px,calc(100% - 32px));border:1px solid #46513e;background:#1b2119;color:var(--ink);border-radius:16px;padding:28px}dialog::backdrop{background:#000b;backdrop-filter:blur(5px)}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.dialog-top h2{font-size:22px;font-weight:450;margin:0}.close-button{background:none;border:0;font-size:26px;color:var(--muted);padding:3px 8px}dialog p{font-size:13px;line-height:1.65;color:var(--muted)}dialog label{display:block;font-size:12px;margin:24px 0 10px}dialog input{display:block;width:100%;border:1px solid #48543f;border-radius:7px;background:#11170f;color:var(--ink);padding:13px;font-size:13px}.field-help{font-size:11px!important}#settings-error{color:var(--red);font-size:12px;min-height:20px}.dialog-actions{display:flex;justify-content:space-between;align-items:center;margin-top:20px}.primary-button{background:var(--green);color:#182013;border:0;padding:12px 20px;border-radius:7px;font-size:12px}.noscript{margin:20px;padding:20px;border:1px solid var(--red)}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:700px){.shell{padding:0 22px}.topbar{height:80px}.brand{font-size:24px}.location{display:none}main{padding-top:40px}.intro{margin-bottom:30px}.clock time{font-size:26px}.clock span{font-size:9px}.clock{padding-top:12px}h1{letter-spacing:-1.2px}.doors{gap:12px}.card-top{padding:20px 16px}.card-top h2{font-size:13px}.signal{width:95px;height:95px}.signal svg{width:34px;height:42px}.signal-area{padding:15px 0 25px}.status-label{font-size:27px}.status-detail{font-size:10px}.card-bottom{padding:13px;flex-direction:column;font-size:9px;gap:9px}.connection{padding:16px;gap:10px}.connection-icon{display:none}.connection-copy span:not(.connection-icon){line-height:1.5;display:block;font-size:10px}.connection p{font-size:11px}.refresh-button{padding:10px;font-size:10px}.legend{gap:16px;font-size:9px}.footnote{font-size:9px}footer{margin-top:32px;gap:12px}footer>span{display:none}footer>div{width:100%;justify-content:space-between}.demo-banner{flex-direction:column;align-items:start;line-height:1.6}}@media(max-width:370px){.shell{padding:0 14px}.clock{display:none}.card-top{padding:15px 12px}.status-label{font-size:23px}.signal{height:80px;width:80px}.legend{gap:9px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Doorswitch, главная"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span>doorswitch<span class="brand-dot">.</span></a>
+      <span class="location">ОФИС <span>/</span> ТУАЛЕТЫ</span>
+      <button class="text-button" id="compact" aria-pressed="false">Компактный вид <span aria-hidden="true">↗</span></button>
+    </header>
+    <main>
+      <section class="intro">
+        <div><p class="eyebrow"><span class="tiny-dot"></span> СЕЙЧАС</p><h1>Можно заходить?</h1><p class="subtitle">Всё видно с первого взгляда.</p></div>
+        <div class="clock"><time id="clock">00:00</time><span id="date"></span></div>
+      </section>
+      <div class="demo-banner" id="demo-banner" hidden><span>ПРИМЕР ЦВЕТОВ · Это демонстрация, не данные датчиков.</span><button id="exit-demo">Вернуться к датчикам ×</button></div>
+      <section class="doors" aria-label="Состояние туалетов">
+        <article class="door-card" id="wc-1" data-state="unknown" aria-labelledby="title-1">
+          <div class="card-top"><h2 id="title-1">Туалет 1</h2><span class="room-number">01</span></div>
+          <div class="signal-area"><div class="signal"><svg viewBox="0 0 48 56" fill="none" aria-hidden="true"><path d="M9 48V9h28v39M4 48h38M14 48V15l18-3v36" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26.5" cy="31" r="1.8" fill="currentColor"/></svg></div></div>
+          <div class="card-status" role="status" aria-live="polite"><span class="status-label">Нет данных</span><p class="status-detail">Ждём ответ от датчика</p></div>
+          <div class="card-bottom"><span><i class="state-dot"></i><span class="door-label">Положение двери неизвестно</span></span><span class="reading-time">Обновлений ещё нет</span></div>
+        </article>
+        <article class="door-card" id="wc-2" data-state="unknown" aria-labelledby="title-2">
+          <div class="card-top"><h2 id="title-2">Туалет 2</h2><span class="room-number">02</span></div>
+          <div class="signal-area"><div class="signal"><svg viewBox="0 0 48 56" fill="none" aria-hidden="true"><path d="M9 48V9h28v39M4 48h38M14 48V15l18-3v36" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26.5" cy="31" r="1.8" fill="currentColor"/></svg></div></div>
+          <div class="card-status" role="status" aria-live="polite"><span class="status-label">Нет данных</span><p class="status-detail">Ждём ответ от датчика</p></div>
+          <div class="card-bottom"><span><i class="state-dot"></i><span class="door-label">Положение двери неизвестно</span></span><span class="reading-time">Обновлений ещё нет</span></div>
+        </article>
+      </section>
+      <section class="connection" aria-label="Обновление данных">
+        <div class="connection-copy"><span class="connection-icon" aria-hidden="true">◌</span><div><p id="connection-title" role="status">Источник не подключён</p><span id="connection-detail">Когда появится связь, статусы обновятся автоматически.</span></div></div>
+        <button class="refresh-button" id="refresh"><span aria-hidden="true">↻</span> Обновить</button>
+      </section>
+      <section class="legend" aria-label="Обозначения"><span><i class="legend-dot green"></i>Свободно</span><span><i class="legend-dot red"></i>Занято</span><span><i class="legend-dot gray"></i>Нет свежих данных</span></section>
+      <p class="footnote">Статус определяется по положению двери. Если ответа нет больше 75 секунд, индикатор становится серым.</p>
+    </main>
+    <footer><span>Меньше ожидания. Больше ясности.</span><div><button class="text-button" id="demo">Посмотреть цвета</button><button class="text-button" id="settings">Подключение <span aria-hidden="true">↗</span></button></div></footer>
+  </div>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form"><div class="dialog-top"><h2 id="settings-title">Источник статусов</h2><button type="button" class="close-button" id="close-settings" aria-label="Закрыть">×</button></div><p>Адрес сервиса, который получает данные от двух датчиков. Настройка действует только в этом браузере.</p><label for="endpoint">Адрес HTTPS API</label><input id="endpoint" type="url" placeholder="https://…/status" autocomplete="off"><p class="field-help">Код подключения к хабу здесь не нужен. Не указывайте ключи и пароли в адресе.</p><p id="settings-error" role="alert"></p><div class="dialog-actions"><button type="button" class="text-button" id="reset-source">Сбросить</button><button type="submit" class="primary-button">Сохранить</button></div></form>
+  </dialog>
+  <noscript><p class="noscript">Для получения статусов включите JavaScript. Сейчас состояние обоих туалетов неизвестно.</p></noscript>
+  <script>window.DOORSWITCH_CONFIG={endpoint:""};</script>
+  <script>(function(){const DOOR_IDS = ['wc-1', 'wc-2'];
+const TTL_MS = 75_000;
+const TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function parseSnapshot(payload, now = Date.now()) {
+  if (payload?.schema_version !== 1 || !Array.isArray(payload.doors) || payload.doors.length > 2) {
+    throw new Error('Invalid status response');
+  }
+  const seen = new Set();
+  for (const door of payload.doors) {
+    if (!door || !DOOR_IDS.includes(door.id) || seen.has(door.id)) throw new Error('Invalid door identity');
+    seen.add(door.id);
+  }
+  return DOOR_IDS.map(id => {
+    const raw = payload.doors.find(door => door.id === id);
+    const stamp = typeof raw?.observed_at === 'string' && TIME.test(raw.observed_at) ? Date.parse(raw.observed_at) : NaN;
+    const valid = raw && ['free', 'busy', 'unknown'].includes(raw.state) && Number.isFinite(stamp) && stamp <= now + 5000;
+    return { id, state: valid ? raw.state : 'unknown', observedAt: valid ? stamp : null };
+  });
+}
+
+function visibleState(door, now = Date.now()) {
+  return door && Number.isFinite(door.observedAt) && now - door.observedAt <= TTL_MS && door.observedAt <= now + 5000 ? door.state : 'unknown';
+}
+
+function validateEndpoint(value) {
+  if (!value.trim()) return '';
+  const url = new URL(value);
+  const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+  if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && local)) || url.username || url.password || url.search || url.hash) {
+    throw new Error('Нужен HTTPS-адрес без паролей, параметров и фрагмента.');
+  }
+  return url.href;
+}
+
+
+const $ = id => document.getElementById(id);
+function setText(element, value) { if (element.textContent !== value) element.textContent = value; }
+const copy = {
+  free: ['Свободно', 'Можно заходить', 'Дверь открыта'],
+  busy: ['Занято', 'Лучше немного подождать', 'Дверь закрыта'],
+  unknown: ['Нет данных', 'Ждём ответ от датчика', 'Положение двери неизвестно']
+};
+const empty = () => DOOR_IDS.map(id => ({ id, state: 'unknown', observedAt: null }));
+const readPreference = key => { try { return localStorage.getItem(key); } catch { return null; } };
+function savePreference(key, value) { try { localStorage.setItem(key, value); } catch { /* This session still works without storage. */ } }
+let endpoint = '';
+try { endpoint = validateEndpoint(readPreference('doorswitch-endpoint') ?? window.DOORSWITCH_CONFIG?.endpoint ?? ''); } catch { /* An invalid saved endpoint stays disconnected. */ }
+let readings = empty();
+let demoMode = false;
+let pending = null;
+let generation = 0;
+let failed = false;
+let demoIndex = 0;
+const scenarios = [['free', 'busy'], ['free', 'free'], ['busy', 'busy'], ['unknown', 'unknown']];
+
+function render() {
+  const now = Date.now();
+  for (const door of readings) {
+    const card = $(door.id);
+    const state = visibleState(door, now);
+    card.dataset.state = state;
+    const text = copy[state];
+    const label = card.querySelector('.status-label');
+    if (label.textContent !== text[0]) label.textContent = text[0];
+    setText(card.querySelector('.status-detail'), demoMode ? 'Пример, не показание датчика' : text[1]);
+    card.querySelector('.door-label').textContent = text[2];
+    card.querySelector('.reading-time').textContent = demoMode ? 'Демонстрация' : door.observedAt === null ? 'Обновлений ещё нет' : `Ответ ${Math.max(0, Math.floor((now - door.observedAt) / 1000))} с назад`;
+  }
+  const known = readings.filter(door => visibleState(door, now) !== 'unknown').length;
+  setText($('connection-title'), demoMode ? 'Показаны примеры состояний' : !endpoint ? 'Источник не подключён' : pending ? 'Обновляем статусы…' : failed ? 'Не удалось обновить данные' : known === 2 ? 'Данные от двух датчиков получены' : 'Нет свежих данных от всех датчиков');
+  $('connection-detail').textContent = demoMode ? 'Повторное нажатие «Посмотреть цвета» переключает пример.' : !endpoint ? 'Когда появится связь, статусы обновятся автоматически.' : failed ? 'Повторим запрос автоматически. Подтверждённые данные действуют до 75 секунд.' : 'Автообновление каждые 20 секунд. Серый цвет означает неизвестный статус.';
+  $('refresh').disabled = Boolean(pending) || demoMode;
+  $('refresh').setAttribute('aria-busy', String(Boolean(pending)));
+  $('demo-banner').hidden = !demoMode;
+  const free = readings.filter(door => visibleState(door, now) === 'free').length;
+  document.title = demoMode ? 'Пример · Doorswitch' : known ? `Свободно: ${free} · Doorswitch` : 'Нет данных · Doorswitch';
+}
+
+async function refresh() {
+  if (demoMode || pending) return;
+  if (!endpoint) { showSettings(); return; }
+  const token = generation;
+  const controller = new AbortController();
+  pending = controller;
+  render();
+  const timeout = setTimeout(() => controller.abort(), 6000);
+  try {
+    const response = await fetch(endpoint, { cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', signal: controller.signal });
+    if (!response.ok) throw new Error('Status unavailable');
+    const text = await response.text();
+    if (text.length > 32768) throw new Error('Status too large');
+    const next = parseSnapshot(JSON.parse(text));
+    if (token === generation && !demoMode) {
+      // A delayed response cannot replace a newer confirmed reading.
+      readings = next.map((door, i) => door.observedAt !== null && readings[i].observedAt !== null && door.observedAt < readings[i].observedAt ? readings[i] : door);
+      failed = false;
+    }
+  } catch {
+    if (token === generation && !demoMode) failed = true;
+  } finally {
+    clearTimeout(timeout);
+    if (pending === controller) pending = null;
+    render();
+  }
+}
+
+function resetReadings() { generation++; pending?.abort(); pending = null; readings = empty(); failed = false; }
+function showSettings() {
+  $('endpoint').value = endpoint;
+  $('settings-error').textContent = '';
+  $('settings-dialog').showModal();
+}
+$('refresh').addEventListener('click', refresh);
+$('settings').addEventListener('click', showSettings);
+$('close-settings').addEventListener('click', () => $('settings-dialog').close());
+$('settings-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    endpoint = validateEndpoint($('endpoint').value);
+    savePreference('doorswitch-endpoint', endpoint);
+    resetReadings(); demoMode = false;
+    $('settings-dialog').close(); render();
+    if (endpoint) refresh();
+  } catch { $('settings-error').textContent = 'Укажите HTTPS-адрес без кода, паролей, параметров и фрагмента.'; }
+});
+$('reset-source').addEventListener('click', () => { $('endpoint').value = ''; $('settings-form').requestSubmit(); });
+$('compact').addEventListener('click', () => {
+  const compact = document.body.classList.toggle('compact');
+  $('compact').setAttribute('aria-pressed', String(compact));
+  $('compact').innerHTML = compact ? 'Полный вид <span aria-hidden="true">↙</span>' : 'Компактный вид <span aria-hidden="true">↗</span>';
+});
+$('demo').addEventListener('click', () => {
+  if (!demoMode) { resetReadings(); demoMode = true; demoIndex = 0; }
+  else demoIndex = (demoIndex + 1) % scenarios.length;
+  readings = DOOR_IDS.map((id, i) => ({ id, state: scenarios[demoIndex][i], observedAt: Date.now() }));
+  render();
+});
+$('exit-demo').addEventListener('click', () => { demoMode = false; resetReadings(); render(); if (endpoint) refresh(); });
+function tick() {
+  const now = new Date();
+  $('clock').textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+  $('date').textContent = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', weekday: 'short', timeZone: 'Europe/Moscow' });
+  if (demoMode) readings.forEach(door => { door.observedAt = Date.now(); });
+  render();
+}
+setInterval(tick, 1000);
+setInterval(() => { if (endpoint && !document.hidden) refresh(); }, 20000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); if (endpoint) refresh(); } });
+window.addEventListener('online', () => { if (endpoint) refresh(); });
+tick();
+if (endpoint) refresh();
+
+})();</script>
+</body>
+</html>
 
