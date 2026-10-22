@@ -204,7 +204,7 @@ function tick() {
   render();
 }
 setInterval(tick, 1000);
-setInterval(() => { if (endpoint && !document.hidden) refresh(); }, 20000);
+setInterval(() => { if (endpoint) refresh(); }, 20000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); if (endpoint) refresh(); } });
 window.addEventListener('online', () => { if (endpoint) refresh(); });
 tick();
