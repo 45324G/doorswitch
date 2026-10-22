@@ -52,7 +52,9 @@
     <form id="settings-form"><div class="dialog-top"><h2 id="settings-title">Источник статусов</h2><button type="button" class="close-button" id="close-settings" aria-label="Закрыть">×</button></div><p>Адрес сервиса, который получает данные от двух датчиков. Настройка действует только в этом браузере.</p><label for="endpoint">Адрес HTTPS API</label><input id="endpoint" type="url" placeholder="https://…/status" autocomplete="off"><p class="field-help">Код подключения к хабу здесь не нужен. Не указывайте ключи и пароли в адресе.</p><p id="settings-error" role="alert"></p><div class="dialog-actions"><button type="button" class="text-button" id="reset-source">Сбросить</button><button type="submit" class="primary-button">Сохранить</button></div></form>
   </dialog>
   <noscript><p class="noscript">Для получения статусов включите JavaScript. Сейчас состояние обоих туалетов неизвестно.</p></noscript>
-  <script>window.DOORSWITCH_CONFIG={endpoint:""};</script>
+  <script>// Only a read-only public status endpoint belongs here. No hub credentials.
+window.DOORSWITCH_CONFIG = Object.freeze({ endpoint: 'https://doorswitch-status-45324g.mdvaleev.chatgpt.site/status' });
+</script>
   <script>(function(){const DOOR_IDS = ['wc-1', 'wc-2'];
 const TTL_MS = 75_000;
 const TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
@@ -100,7 +102,8 @@ const empty = () => DOOR_IDS.map(id => ({ id, state: 'unknown', observedAt: null
 const readPreference = key => { try { return localStorage.getItem(key); } catch { return null; } };
 function savePreference(key, value) { try { localStorage.setItem(key, value); } catch { /* This session still works without storage. */ } }
 let endpoint = '';
-try { endpoint = validateEndpoint(readPreference('doorswitch-endpoint') ?? window.DOORSWITCH_CONFIG?.endpoint ?? ''); } catch { /* An invalid saved endpoint stays disconnected. */ }
+let defaultEndpoint = '';
+try { defaultEndpoint = validateEndpoint(window.DOORSWITCH_CONFIG?.endpoint ?? ''); endpoint = validateEndpoint(readPreference('doorswitch-endpoint') || defaultEndpoint); } catch { /* An invalid saved endpoint stays disconnected. */ }
 let readings = empty();
 let demoMode = false;
 let pending = null;
@@ -172,8 +175,9 @@ $('close-settings').addEventListener('click', () => $('settings-dialog').close()
 $('settings-form').addEventListener('submit', event => {
   event.preventDefault();
   try {
-    endpoint = validateEndpoint($('endpoint').value);
-    savePreference('doorswitch-endpoint', endpoint);
+    const customEndpoint = validateEndpoint($('endpoint').value);
+    endpoint = customEndpoint || defaultEndpoint;
+    savePreference('doorswitch-endpoint', customEndpoint);
     resetReadings(); demoMode = false;
     $('settings-dialog').close(); render();
     if (endpoint) refresh();
@@ -209,4 +213,3 @@ if (endpoint) refresh();
 })();</script>
 </body>
 </html>
-
